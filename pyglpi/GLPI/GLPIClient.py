@@ -41,7 +41,6 @@ class RESTClient:
         """
 
         self.url = self.SCHEME + host + self.BASEURL + '/plugins/webservices/rest.php?'
-
         self.login_name = None
         self.login_password = None
         if login_name: self.login_name = login_name
@@ -287,9 +286,30 @@ class RESTClient:
 
         for arg in kwargs:
             params[arg]  = kwargs[arg]
-
+            
         response = urllib2.urlopen(self.__request__(params))
         return json.loads(response.read())
+
+    def get_puppetclass(self,hostname):
+        """
+        Return a JSON serialized object list of custom fields from the GLPI server.
+        """
+        params = {'method':'glpi.listComputers',
+                  'name':hostname,
+                  'session':self.session}
+        response = urllib2.urlopen(self.__request__(params))
+        ret=json.loads(response.read())
+        id=ret[0]['id']
+        params = {'method':'glpi.getCustomfields',
+                  'id':id,
+                  'session':self.session,
+                  'itemtype':'computer',
+                  'field':'puppetclass'
+                  }
+        response = urllib2.urlopen(self.__request__(params))
+        ret=json.loads(response.read())
+        return ret
+        
 
     def get_computer_infocoms(self,computer_id,id2name=None,_help=None):
         """
