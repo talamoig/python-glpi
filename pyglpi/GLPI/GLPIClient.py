@@ -1105,7 +1105,7 @@ class RESTClient:
         :param fields: inject data into GLPI
         :param _help: get usage information
         """
-        params = {'method':'glpi.createTicket',
+        params = {'method':'glpi.createObjects',
                   'session':self.session,
                   'fields':fields}
         if _help: params['help'] = _help
